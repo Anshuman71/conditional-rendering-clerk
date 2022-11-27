@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  SignInButton,
+  useUser,
+} from "@clerk/clerk-react";
+
+const frontendApi = process.env.REACT_APP_CLERK_FRONTEND_API;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+    <ClerkProvider frontendApi={frontendApi}>
+      <SignedIn>
+        <p style={{ padding: 20 }}>Welcome to the amazing dashboard!</p>
+      </SignedIn>
+      <SignedOut>
+        <p style={{ padding: 20 }}>
+          You must be signed in to use the dashboard.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      </SignedOut>
+    </ClerkProvider>
+  );
+}
+
+function NavBar() {
+  const { user, isSignedIn } = useUser();
+  return (
+    <nav
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "10px 20px",
+        backgroundColor: "peachpuff",
+      }}
+    >
+      <h2>Amazing dashboard</h2>
+      {isSignedIn ? (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <p style={{ marginRight: 10 }}>Hello, {user.firstName}!</p>
+          <SignOutButton />
+        </div>
+      ) : (
+        <SignInButton />
+      )}
+    </nav>
   );
 }
 
